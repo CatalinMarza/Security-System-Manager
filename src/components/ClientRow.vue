@@ -4,11 +4,13 @@
       <div class="name">{{ client.name }}</div>
       <div class="meta">{{ client.type }} · {{ client.email || "-" }}</div>
     </div>
-
+    
     <div class="actions">
       <button @click="$emit('open', client.id)">Detalii</button>
       <button class="danger" @click="$emit('remove', client.id)">Șterge</button>
     </div>
+
+   
   </div>
 </template>
 

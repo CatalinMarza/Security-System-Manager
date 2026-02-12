@@ -30,7 +30,6 @@ export default {
           { id: uid("cat"), type: "produs", name: "NVR 8 canale", price: 650 },
           { id: uid("cat"), type: "produs", name: "Senzor ușă/geam", price: 45 },
           { id: uid("cat"), type: "produs", name: "Centrală alarmă + tastatură", price: 520 },
-
           { id: uid("cat"), type: "serviciu", name: "Montaj cameră", price: 150 },
           { id: uid("cat"), type: "serviciu", name: "Configurare NVR + rețea", price: 200 },
           { id: uid("cat"), type: "serviciu", name: "Mentenanță lunară", price: 120 },

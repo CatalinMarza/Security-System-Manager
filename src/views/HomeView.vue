@@ -1,20 +1,34 @@
 <template>
-  <div class="grid">
-    <BaseCard title="Clienți">
-      <div style="font-size:34px;font-weight:800">{{ clientsCount }}</div>
-      <span class="badge">persistență localStorage</span>
-    </BaseCard>
+  <BaseCard title="Dashboard">
 
-    <BaseCard title="Catalog">
-      <div style="font-size:34px;font-weight:800">{{ catalogCount }}</div>
-      <span class="badge">produse + servicii</span>
-    </BaseCard>
+    <div class="grid">
 
-    <BaseCard title="Routing">
-      <div style="font-size:34px;font-weight:800">OK</div>
-      <span class="badge">dinamic + nested</span>
-    </BaseCard>
-  </div>
+      <div class="stat">
+        <div class="label">Clienți</div>
+        <div class="value">{{ clientsCount }}</div>
+        <div class="small">persistență localStorage</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Catalog</div>
+        <div class="value">{{ catalogCount }}</div>
+        <div class="small">produse + servicii</div>
+      </div>
+
+      <div class="stat clock">
+         <div class="label">Ora sistemului</div>
+         <div class="value">{{ time }}</div>
+        <div class="small">{{ date }}</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Oferte</div>
+         <div class="value">{{ offersCount }}</div>
+          <div class="small">oferte create</div>
+      </div>
+    </div>
+
+  </BaseCard>
 </template>
 
 <script>
@@ -23,13 +37,71 @@ import BaseCard from "../components/BaseCard.vue";
 export default {
   name: "HomeView",
   components: { BaseCard },
-  computed: {
-    clientsCount() {
+
+  data(){
+    return{
+      time:"",
+      date:""
+    };
+  },
+
+  computed:{
+    clientsCount(){
       return this.$store.state.data.clients.length;
     },
-    catalogCount() {
+    catalogCount(){
       return this.$store.state.data.catalog.length;
     },
+    offersCount(){
+      return this.$store.state.data.offers.length;
+    }
+  },
+
+  mounted(){
+    this.updateClock();
+    this.timer = setInterval(() => {
+      this.updateClock();
+    }, 1000);
+  },
+  methods:{
+    updateClock(){
+      const now = new Date();
+      this.time = now.toLocaleTimeString();
+      this.date = now.toLocaleDateString();
+    }
   },
 };
+
 </script>
+
+<style scoped>
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+
+.stat{
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  padding:18px;
+  background:#fff;
+}
+
+.label{
+  font-size:14px;
+  color:#6b7280;
+}
+
+.value{
+  font-size:36px;
+  font-weight:800;
+  color:#1e40af;
+  margin:6px 0;
+}
+
+.small{
+  font-size:13px;
+  color:#6b7280;
+}
+</style>

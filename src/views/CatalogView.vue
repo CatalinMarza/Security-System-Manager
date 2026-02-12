@@ -51,6 +51,12 @@ import BaseCard from "../components/BaseCard.vue";
 export default {
   name: "CatalogView",
   components: { BaseCard },
+
+ //Simulare încărcare date chiar dacă datele sunt locale.
+  created() {
+  console.log("Catalog încărcat");
+  },
+
   data() {
     return {
       type: "",
