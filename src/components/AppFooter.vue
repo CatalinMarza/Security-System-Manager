@@ -3,7 +3,7 @@
     <div class="container">
       <small>© {{ year }} Service Manager</small>
     </div>
-  </footer>
+    </footer>
 </template>
 
 <script>

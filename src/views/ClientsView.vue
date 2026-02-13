@@ -46,6 +46,16 @@ import ClientList from "../components/ClientList.vue";
 export default {
   name: "ClientsView",
   components: { BaseCard, ClientList },
+
+  created() {
+  // dacă nu există clienți, încarcă demo automat
+    console.log("ClientsView - clienții au fost adăugați prin importDEMO");
+    if (this.$store.state.data.clients.length === 0) {
+      this.importDemo();
+    }
+  },
+
+
   data() {
     return {
       q: "",
@@ -76,7 +86,7 @@ export default {
   },
 
   
-  methods: {
+   methods: {
     openClient(id) {
     this.$router.push(`/clients/${id}`);
     },
@@ -101,6 +111,7 @@ export default {
       this.form = { type: "", name: "", email: "", cnp: "", cui: "" };
     },
     async importDemo() {
+      console.log("Se apelează acțiunea async...");
       await this.$store.dispatch("data/importDemoClientsAsync");
     },
   },

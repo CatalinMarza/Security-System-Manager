@@ -4,15 +4,13 @@
     <div class="grid">
 
       <div class="stat">
-        <div class="label">Clienți</div>
+        <div class="label">Total clienți</div>
         <div class="value">{{ clientsCount }}</div>
-        <div class="small">persistență localStorage</div>
       </div>
 
       <div class="stat">
-        <div class="label">Catalog</div>
+        <div class="label">Total produse și servicii în catalog</div>
         <div class="value">{{ catalogCount }}</div>
-        <div class="small">produse + servicii</div>
       </div>
 
       <div class="stat clock">
@@ -22,9 +20,8 @@
       </div>
 
       <div class="stat">
-        <div class="label">Oferte</div>
+        <div class="label">Total oferte create</div>
          <div class="value">{{ offersCount }}</div>
-          <div class="small">oferte create</div>
       </div>
     </div>
 
@@ -62,6 +59,9 @@ export default {
     this.timer = setInterval(() => {
       this.updateClock();
     }, 1000);
+
+    document.title = "Home - Security Systems Manager";
+
   },
   methods:{
     updateClock(){

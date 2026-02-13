@@ -69,6 +69,11 @@ export default {
       error: "",
     };
   },
+
+  mounted() {
+    document.title = "Catalog - Security Systems Manager";
+  },
+
   computed: {
     items() {
       return this.$store.state.data.catalog;

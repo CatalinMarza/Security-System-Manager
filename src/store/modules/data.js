@@ -4,10 +4,12 @@ function uid(prefix = "id") {
 
 export default {
   namespaced: true,
+
   state: () => ({
     clients: [],
     catalog: [],
     offers: [],
+    httpError: "",
   }),
 
   getters: {
@@ -20,7 +22,13 @@ export default {
         state.clients = rootState.data.clients || [];
         state.catalog = rootState.data.catalog || [];
         state.offers = rootState.data.offers || [];
+        state.httpError = rootState.data.httpError || "";
       }
+    },
+
+    // NEW: mutation separată (nu în seedIfEmpty!)
+    setHttpError(state, msg) {
+      state.httpError = msg || "";
     },
 
     seedIfEmpty(state) {
@@ -38,8 +46,13 @@ export default {
     },
 
     addClient(state, client) {
-      state.clients.unshift({ ...client, id: uid("cli"), createdAt: new Date().toISOString() });
+      state.clients.unshift({
+        ...client,
+        id: uid("cli"),
+        createdAt: new Date().toISOString(),
+      });
     },
+
     addCatalogItem(state, item) {
       state.catalog.unshift({ ...item, id: uid("cat") });
     },
@@ -48,12 +61,15 @@ export default {
       state.clients = state.clients.filter((c) => c.id !== clientId);
       state.offers = state.offers.filter((o) => o.clientId !== clientId);
     },
+
     addOffer(state, offer) {
       state.offers.unshift({ ...offer, id: uid("off") });
     },
+
     deleteOffer(state, offerId) {
       state.offers = state.offers.filter((o) => o.id !== offerId);
     },
+
     updateOffer(state, updated) {
       const idx = state.offers.findIndex((o) => o.id === updated.id);
       if (idx === -1) return;
@@ -63,17 +79,27 @@ export default {
 
   actions: {
     async importDemoClientsAsync({ commit }) {
-      const res = await fetch("https://jsonplaceholder.typicode.com/users");
-      const users = await res.json();
-      users.slice(0, 5).forEach((u) => {
-        commit("addClient", {
-          type: "PJ",
-          name: u.company?.name || u.name,
-          email: u.email,
-          phone: u.phone,
-          cui: "RO" + String(Math.floor(Math.random() * 9000000 + 1000000)),
+      commit("setHttpError", "");
+
+      try {
+        const res = await fetch("https://jsonplaceholder.typicode.com/users");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const users = await res.json();
+
+        users.slice(0, 5).forEach((u) => {
+          commit("addClient", {
+            type: "PF",
+            name: u.name,
+            email: u.email,
+            cnp: "0000000000000",
+            cui: "",
+          });
         });
-      });
+      
+      } catch (e) {
+        commit("setHttpError", "Eroare la import: " + (e?.message || "necunoscută"));
+      }
     },
   },
 };
