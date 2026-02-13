@@ -2,6 +2,51 @@ function uid(prefix = "id") {
   return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now()}`;
 }
 
+function isValidEmail(email) {
+  if (!email) return true; // optional
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function normalizeClient(input) {
+  const type = (input?.type || "").trim();
+  const name = (input?.name || "").trim();
+  const email = (input?.email || "").trim();
+  const cnp = (input?.cnp || "").trim();
+  const cui = (input?.cui || "").trim();
+
+  if (!["PF", "PFA", "PJ"].includes(type)) {
+    return { ok: false, error: "Tip client invalid (PF/PFA/PJ)." };
+  }
+
+  if (!name) {
+    return { ok: false, error: "Nume/Denumire obligatoriu." };
+  }
+
+  if (!isValidEmail(email)) {
+    return { ok: false, error: "Email invalid." };
+  }
+
+  if (type === "PF") {
+    if (!/^\d{13}$/.test(cnp)) {
+      return { ok: false, error: "CNP trebuie să aibă 13 cifre." };
+    }
+    return {
+      ok: true,
+      client: { type, name, email, cnp, cui: "" }, // force clear cui
+    };
+  }
+
+  // PFA / PJ
+  if (!cui) {
+    return { ok: false, error: "CUI obligatoriu pentru PFA/PJ." };
+  }
+
+  return {
+    ok: true,
+    client: { type, name, email, cnp: "", cui }, // force clear cnp
+  };
+}
+
 export default {
   namespaced: true,
 
@@ -26,7 +71,6 @@ export default {
       }
     },
 
-    // NEW: mutation separată (nu în seedIfEmpty!)
     setHttpError(state, msg) {
       state.httpError = msg || "";
     },
@@ -45,9 +89,18 @@ export default {
       }
     },
 
-    addClient(state, client) {
+    addClient(state, clientPayload) {
+      // IMPORTANT: validare în store
+      state.httpError = "";
+
+      const res = normalizeClient(clientPayload);
+      if (!res.ok) {
+        state.httpError = res.error;
+        return; // nu adăuga nimic
+      }
+
       state.clients.unshift({
-        ...client,
+        ...res.client,
         id: uid("cli"),
         createdAt: new Date().toISOString(),
       });
@@ -75,6 +128,16 @@ export default {
       if (idx === -1) return;
       state.offers[idx] = { ...state.offers[idx], ...updated };
     },
+
+    deleteCatalogItem(state, itemId) {
+      state.catalog = state.catalog.filter((i) => i.id !== itemId);
+    },
+
+    updateCatalogItem(state, updated) {
+      const idx = state.catalog.findIndex((i) => i.id === updated.id);
+      if (idx === -1) return;
+      state.catalog[idx] = { ...state.catalog[idx], ...updated };
+    },
   },
 
   actions: {
@@ -88,15 +151,17 @@ export default {
         const users = await res.json();
 
         users.slice(0, 5).forEach((u) => {
+          // Dacă vrei să rămână PF, ai două opțiuni:
+          // 1) pui un CNP valid fictiv (13 cifre) -> trece validarea
+          // 2) imporți ca PJ cu CUI "DEMO..." (mai realist)
           commit("addClient", {
-            type: "PF",
+            type: "PJ",
             name: u.name,
             email: u.email,
-            cnp: "0000000000000",
-            cui: "",
+            cui: "DEMO-" + String(u.id),
+            cnp: "",
           });
         });
-      
       } catch (e) {
         commit("setHttpError", "Eroare la import: " + (e?.message || "necunoscută"));
       }

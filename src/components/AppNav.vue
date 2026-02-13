@@ -139,18 +139,42 @@ export default { name: "AppNav",
 
 /* ✅ mobile */
 @media (max-width: 640px){
+
   .wrap{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:10px;
+    display:grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand user"
+      "links links";
+    gap:12px;
+    align-items:center;
   }
+
+  .brand{
+    grid-area:brand;
+    position:static;
+    transform:none;
+    justify-self:start;
+  }
+
+  .user{
+    grid-area:user;
+    justify-self:end;
+  }
+
   .links{
+    grid-area:links;
     width:100%;
   }
+
   .links a{
     width:100%;
+    text-align:left;
   }
+
 }
+
+
 
 </style>
 

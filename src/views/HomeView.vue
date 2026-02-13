@@ -38,7 +38,8 @@ export default {
   data(){
     return{
       time:"",
-      date:""
+      date:"",
+      timer: null
     };
   },
 
@@ -55,12 +56,11 @@ export default {
   },
 
   mounted(){
+    console.log("HomeView montat – timer pornit");
     this.updateClock();
     this.timer = setInterval(() => {
       this.updateClock();
     }, 1000);
-
-    document.title = "Home - Security Systems Manager";
 
   },
   methods:{
@@ -69,6 +69,11 @@ export default {
       this.time = now.toLocaleTimeString();
       this.date = now.toLocaleDateString();
     }
+  },
+  
+    beforeUnmount() { 
+      console.log("HomeView demontat – timer oprit");
+      clearInterval(this.timer);
   },
 };
 
