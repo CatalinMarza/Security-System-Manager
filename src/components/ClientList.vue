@@ -5,6 +5,7 @@
       :key="c.id"
       :client="c"
       @open="$emit('open', $event)"
+      @edit="$emit('edit', $event)"
       @remove="$emit('remove', $event)"
     />
     <p v-if="clients.length === 0" class="empty">Nu există clienți.</p>
@@ -18,7 +19,7 @@ export default {
   name: "ClientList",
   components: { ClientRow },
   props: { clients: { type: Array, required: true } },
-  emits: ["open", "remove"],
+  emits: ["open", "edit", "remove"],
 };
 </script>
 

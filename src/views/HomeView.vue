@@ -9,7 +9,7 @@
       </div>
 
       <div class="stat">
-        <div class="label">Total produse și servicii în catalog</div>
+        <div class="label">Total produse și servicii existente în catalog</div>
         <div class="value">{{ catalogCount }}</div>
       </div>
 

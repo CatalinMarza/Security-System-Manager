@@ -1,49 +1,69 @@
 <template>
   <BaseCard title="Clienți (sisteme de securitate)">
-    <div class="toolbar">
-      <input v-model.trim="q" placeholder="Caută după nume..." />
-      <select v-model="sortBy">
-        <option value="name_asc">Nume A-Z</option>
-        <option value="name_desc">Nume Z-A</option>
-        <option value="newest">Cei mai noi</option>
-      </select>
-      <button @click="importDemo">Import demo (async)</button>
-    </div>
+      <div class="toolbar">
+        <input v-model.trim="q" placeholder="Caută după nume..." />
+        <select v-model="sortBy">
+          <option value="name_asc">Nume A-Z</option>
+          <option value="name_desc">Nume Z-A</option>
+          <option value="newest">Cei mai noi</option>
+        </select>
+        <button @click="importDemo">Import demo (async)</button>
+      </div>
 
-    <ClientList
-      :clients="filteredClients"
-      @open="openClient"
-      @remove="removeClient"
-    />
+      <ClientList
+        :clients="filteredClients"
+        @open="openClient"
+        @edit="startEdit"
+        @remove="removeClient"
+      />
+
+
+      <div v-if="editId" class="editBox">
+        <strong>Editează client</strong>
+
+        <div class="form">
+          <select v-model="editForm.type">
+            <option>PF</option>
+            <option>PFA</option>
+            <option>PJ</option>
+          </select>
+          <input v-model.trim="editForm.name" placeholder="Nume / Denumire" />
+          <input v-model.trim="editForm.email" placeholder="Email" />
+          <input v-if="editForm.type==='PF'" v-model.trim="editForm.cnp" placeholder="CNP (13 cifre)" />
+          <input v-else v-model.trim="editForm.cui" placeholder="CUI" />
+          <button @click="saveEdit(editId)">Salvează</button>
+          <button @click="cancelEdit">Anulează</button>
+        </div>
+      </div>
 
     <template #footer>
       <div class="footer-form">
         <strong>Adaugă client</strong>
 
-        <div class="form">
-          <select v-model="form.type">
-            <option disabled value="">Tip</option>
-            <option value="PF">PF</option>
-            <option value="PFA">PFA</option>
-            <option value="PJ">PJ</option>
-          </select>
+          <div class="form">
+            <select v-model="form.type">
+              <option disabled value="">Tip</option>
+              <option value="PF">PF</option>
+              <option value="PFA">PFA</option>
+              <option value="PJ">PJ</option>
+            </select>
 
-          <input v-model.trim="form.name" placeholder="Nume / Denumire" />
-          <input v-model.trim="form.email" placeholder="Email (opțional)" />
+            <input v-model.trim="form.name" placeholder="Nume / Denumire" />
+            <input v-model.trim="form.email" placeholder="Email (opțional)" />
 
-          <input
-            v-if="form.type === 'PF'"
-            v-model.trim="form.cnp"
-            placeholder="CNP (13 cifre)"
-            inputmode="numeric"
-          />
-          <input
-            v-else
-            v-model.trim="form.cui"
-            placeholder="CUI (ex: RO123...)"
-          />
+            <input
+              v-if="form.type === 'PF'"
+              v-model.trim="form.cnp"
+              placeholder="CNP (13 cifre)"
+              inputmode="numeric"
+            />
+            <input
+              v-else
+              v-model.trim="form.cui"
+              placeholder="CUI (ex: RO123...)"
+            />
 
-          <button :disabled="!canSubmit" @click="addClient">Adaugă</button>
+            <button :disabled="!canSubmit" @click="addClient">Adaugă</button>
         </div>
 
         <p v-if="error" class="err">{{ error }}</p>
@@ -66,6 +86,8 @@ export default {
       sortBy: "name_asc",
       form: { type: "", name: "", email: "", cnp: "", cui: "" },
       error: "",
+      editId: "",
+      editForm: { type: "", name: "", email: "", cnp: "", cui: "" },
     };
   },
 
@@ -198,11 +220,65 @@ export default {
       this.form = { type: "", name: "", email: "", cnp: "", cui: "" };
       this.error = "";
     },
-
+    
     async importDemo() {
       console.log("Se apelează acțiunea async...");
       await this.$store.dispatch("data/importDemoClientsAsync");
     },
+
+    startEdit(client) {
+      this.editId = client.id;
+      this.editForm = {
+        type: client.type || "",
+        name: client.name || "",
+        email: client.email || "",
+        cnp: client.cnp || "",
+        cui: client.cui || "",
+        };
+      },
+
+    cancelEdit() {
+      this.editId = "";
+      this.editForm = { type: "", name: "", email: "", cnp: "", cui: "" };
+    },
+
+    saveEdit(id) {
+      const type = this.editForm.type;
+      const name = (this.editForm.name || "").trim();
+      const email = (this.editForm.email || "").trim();
+      const cnp = (this.editForm.cnp || "").trim();
+      const cui = (this.editForm.cui || "").trim();
+
+      if (!type) return alert("Tip client obligatoriu.");
+      if (!name) return alert("Nume/Denumire obligatoriu.");
+
+      // vaidare email
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return alert("Email invalid.");
+        }
+
+      if (type === "PF") {
+        if (!/^\d{13}$/.test(cnp)) {
+          return alert("CNP trebuie să aibă 13 cifre.");
+        }
+      } 
+      else {
+        if (!cui) {
+          return alert("CUI obligatoriu pentru PFA/PJ.");
+          }
+      }
+
+      this.$store.commit("data/updateClient", {
+        id,
+        type,
+        name,
+        email,
+        cnp,
+        cui,
+      });
+
+      this.cancelEdit();
+    }
   },
 };
 </script>
@@ -251,4 +327,7 @@ button:disabled {
   color: #b00020;
   margin: 0;
 }
+
+.editBox{ margin-top:12px; padding:12px; border:1px solid #eee; border-radius:12px; background:#fff; }
+
 </style>

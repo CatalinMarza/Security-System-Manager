@@ -7,6 +7,7 @@
     
     <div class="actions">
       <button @click="$emit('open', client.id)">Detalii</button>
+      <button class="btn" @click="$emit('edit', client)">Editează</button>
       <button class="danger" @click="$emit('remove', client.id)">Șterge</button>
     </div>
 
@@ -18,7 +19,7 @@
 export default {
   name: "ClientRow",
   props: { client: { type: Object, required: true } },
-  emits: ["open", "remove"],
+  emits: ["open", "edit", "remove"],
 };
 </script>
 

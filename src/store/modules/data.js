@@ -96,7 +96,7 @@ export default {
       const res = normalizeClient(clientPayload);
       if (!res.ok) {
         state.httpError = res.error;
-        return; // nu adăuga nimic
+        return;
       }
 
       state.clients.unshift({
@@ -106,8 +106,10 @@ export default {
       });
     },
 
-    addCatalogItem(state, item) {
-      state.catalog.unshift({ ...item, id: uid("cat") });
+    updateClient(state, updated) {
+      const idx = state.clients.findIndex((c) => c.id === updated.id);
+       if (idx === -1) return;
+      state.clients[idx] = { ...state.clients[idx], ...updated };
     },
 
     deleteClient(state, clientId) {
@@ -115,6 +117,20 @@ export default {
       state.offers = state.offers.filter((o) => o.clientId !== clientId);
     },
 
+    addCatalogItem(state, item) {
+      state.catalog.unshift({ ...item, id: uid("cat") });
+    },
+
+    deleteCatalogItem(state, itemId) {
+      state.catalog = state.catalog.filter((i) => i.id !== itemId);
+    },
+
+    updateCatalogItem(state, updated) {
+      const idx = state.catalog.findIndex((i) => i.id === updated.id);
+      if (idx === -1) return;
+      state.catalog[idx] = { ...state.catalog[idx], ...updated };
+    },
+  
     addOffer(state, offer) {
       state.offers.unshift({ ...offer, id: uid("off") });
     },
@@ -127,16 +143,6 @@ export default {
       const idx = state.offers.findIndex((o) => o.id === updated.id);
       if (idx === -1) return;
       state.offers[idx] = { ...state.offers[idx], ...updated };
-    },
-
-    deleteCatalogItem(state, itemId) {
-      state.catalog = state.catalog.filter((i) => i.id !== itemId);
-    },
-
-    updateCatalogItem(state, updated) {
-      const idx = state.catalog.findIndex((i) => i.id === updated.id);
-      if (idx === -1) return;
-      state.catalog[idx] = { ...state.catalog[idx], ...updated };
     },
   },
 
