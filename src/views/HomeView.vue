@@ -57,6 +57,9 @@ export default {
 
   mounted(){
     console.log("HomeView montat – timer pornit");
+    
+    document.title = "Home - Security Systems Manager";
+
     this.updateClock();
     this.timer = setInterval(() => {
       this.updateClock();
