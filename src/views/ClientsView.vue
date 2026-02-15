@@ -179,7 +179,7 @@ export default {
         return false;
       }
 
-      // email opțional, dar dacă există să fie cât de cât valid
+      // email opțional, validare regex
       if (email) {
         const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         if (!okEmail) {
