@@ -98,7 +98,7 @@ export default { name: "AppNav",
   background:#f7f7f7;
 }
 
-/* ✅ USER BOX (pe desktop + mobile) */
+/*USER BOX (pe desktop + mobile) */
 .user{
   display:flex;
   align-items:center;
@@ -137,7 +137,7 @@ export default { name: "AppNav",
   font-size:12px;
 }
 
-/* ✅ mobile */
+/*mobile */
 @media (max-width: 640px){
 
   .wrap{

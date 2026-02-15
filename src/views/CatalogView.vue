@@ -163,7 +163,7 @@ export default {
 
       this.$store.commit("data/deleteCatalogItem", id);
 
-      // dacă ștergi fix item-ul editat, închide editarea
+      // dacă șterg fix item-ul editat, închide editarea
       if (this.editId === id) this.cancelEdit();
     },
   },

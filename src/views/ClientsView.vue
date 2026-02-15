@@ -129,7 +129,7 @@ export default {
 
   watch: {
     "form.type"(newType) {
-      // când schimbi tipul, curăță câmpurile care nu se aplică
+      // când schimb tipul, curăță câmpurile care nu se aplică
       this.error = "";
       if (newType === "PF") {
         this.form.cui = "";

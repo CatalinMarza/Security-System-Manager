@@ -118,7 +118,7 @@ export default {
     return {
       openId: "",
       editId: "",
-      drafts: {}, // { [offerId]: { status, lines, _newItemId, _newQty } }
+      drafts: {}, 
     };
   },
   computed: {

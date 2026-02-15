@@ -90,7 +90,7 @@ export default {
     },
 
     addClient(state, clientPayload) {
-      // IMPORTANT: validare în store
+      // validare în store
       state.httpError = "";
 
       const res = normalizeClient(clientPayload);
@@ -157,10 +157,7 @@ export default {
         const users = await res.json();
 
         users.slice(0, 5).forEach((u) => {
-          // Dacă vrei să rămână PF, ai două opțiuni:
-          // 1) pui un CNP valid fictiv (13 cifre) -> trece validarea
-          // 2) imporți ca PJ cu CUI "DEMO..." (mai realist)
-          commit("addClient", {
+                    commit("addClient", {
             type: "PJ",
             name: u.name,
             email: u.email,
