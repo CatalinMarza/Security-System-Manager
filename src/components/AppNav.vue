@@ -29,11 +29,18 @@
 
 <script>
 export default { name: "AppNav", 
+
   computed: {
-    userName() { return this.$store.state.user.name; },
-    userRole() { return this.$store.state.user.role; },
-    userAvatar() { return this.$store.state.user.avatar; },
+    userName() { 
+      return this.$store.state.user.name;
     },
+    userRole(){ 
+      return this.$store.state.user.role; 
+    },
+    userAvatar() { 
+      return this.$store.state.user.avatar; 
+    },
+  },
 };
 
 </script>
@@ -64,13 +71,16 @@ export default { name: "AppNav",
 
 .title{
   text-decoration:none;
-  font-size:18px;
   font-weight:600;
-  padding:8px 10px;
+  color:#1e40af;
+  font-size: clamp(14px, 1.6vw, 18px);
+  padding: clamp(4px, 0.8vw, 8px) clamp(6px, 1.0vw, 10px);
   border-radius:12px;
   border:1px solid transparent;
-  color:#1e40af;
+  white-space: nowrap;
 }
+
+
 
 .links{
   display:flex;
@@ -81,11 +91,14 @@ export default { name: "AppNav",
 
 .links a{
   text-decoration:none;
-  padding:8px 10px;
-  border-radius:12px;
-  border:1px solid transparent;
   color:inherit;
+  border:1px solid transparent;
+  border-radius:12px;
   transition: all 0.2s ease;
+
+  font-size: clamp(13px, 1.2vw, 16px);
+  padding: clamp(5px, 0.7vw, 8px) clamp(7px, 0.9vw, 10px);
+  white-space: nowrap;
 }
 
 .links a:hover{
@@ -138,21 +151,23 @@ export default { name: "AppNav",
 }
 
 /*mobile */
-@media (max-width: 640px){
-
+/* când nu mai încape pe un singur rând -> titlu + user SUS, meniul JOS */
+@media (max-width: 980px){
   .wrap{
+    position: static;
     display:grid;
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "brand user"
       "links links";
-    gap:12px;
+    gap:10px;
     align-items:center;
   }
 
   .brand{
     grid-area:brand;
     position:static;
+    left:auto;
     transform:none;
     justify-self:start;
   }
@@ -167,12 +182,12 @@ export default { name: "AppNav",
     width:100%;
   }
 
-  .links a{
-    width:100%;
-    text-align:left;
+  /* pe îngust, poți lăsa butoanele să curgă frumos */
+  .links{
+    flex-wrap:wrap;
   }
-
 }
+
 
 
 

@@ -24,10 +24,48 @@ export default {
 </script>
 
 <style scoped>
-.row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid #eee; }
-.name { font-weight: 700; }
-.meta { font-size: 13px; color: #666; }
-.actions { display:flex; gap:8px; }
-button { border: 1px solid #ddd; background:#fff; padding:6px 10px; border-radius:10px; cursor:pointer; }
-button.danger { border-color:#f0caca; }
+.row { 
+  display:flex; 
+  align-items:center; 
+  justify-content:space-between; 
+  gap:12px; 
+  padding:10px 0; 
+  border-bottom:1px solid #eee; 
+}
+.name { font-weight: 700; 
+}
+.meta { 
+  font-size: 13px; 
+  color: #666; 
+}
+.actions { display:flex; 
+  gap:8px; 
+}
+button { 
+  border:1px solid #ddd;
+  background:#fff;
+  padding:4px 8px;        /* mai mic */
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;        /* text mai mic */
+  line-height:1;
+}
+
+button.danger { 
+  border-color:#f0caca; 
+  }
+
+@media (max-width:640px){
+
+  .actions{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .actions button{
+    width:100%;
+    text-align:center;
+  }
+
+}
 </style>

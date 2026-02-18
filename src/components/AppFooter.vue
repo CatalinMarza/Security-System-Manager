@@ -1,7 +1,7 @@
 <template>
   <footer class="foot">
     <div class="container">
-      <small>© {{ year }} Service Manager</small>
+      <small>© {{ year }} Security Systems Manager</small>
     </div>
     </footer>
 </template>

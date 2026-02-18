@@ -84,10 +84,17 @@ export default {
     return {
       q: "",
       sortBy: "name_asc",
-      form: { type: "", name: "", email: "", cnp: "", cui: "" },
+      form: { 
+        type: "",
+        name: "", 
+        email: "", 
+        cnp: "", 
+        cui: "" 
+      },
       error: "",
       editId: "",
       editForm: { type: "", name: "", email: "", cnp: "", cui: "" },
+      //clients: this.$store.state.data.clients,
     };
   },
 
@@ -121,9 +128,8 @@ export default {
       // minim pentru UX: nu lăsa butonul activ când lipsesc câmpuri obligatorii
       if (!this.form.type) return false;
       if (!this.form.name?.trim()) return false;
-
       if (this.form.type === "PF") return /^\d{13}$/.test(this.form.cnp || "");
-      return (this.form.cui || "").trim().length > 0;
+            return (this.form.cui || "").trim().length > 0;
     },
   },
 
@@ -137,6 +143,15 @@ export default {
         this.form.cnp = "";
       }
     },
+
+    //"$store.state.data.clients": { //Daca punem this.$store.state.data.clients in data trebuie sa adaugam si deep: true, dar nu e recomandat sa facem watch direct pe store, ci sa folosim computed (vezi clients() de mai sus)
+      //deep: true,
+      //handler(newVal) {
+     // this.clients = newVal;
+     // }
+   // }
+
+
   },
 
   created() {
@@ -157,6 +172,10 @@ export default {
     },
 
     removeClient(id) {
+      const client = this.$store.state.data.clients.find(c => c.id === id);
+
+      console.log("ClientsView removeClient - Clientul", client?.name || "(necunoscut)", "a fost șters.");
+
       this.$store.commit("data/deleteClient", id);
     },
 
@@ -298,13 +317,16 @@ select {
   padding: 8px 10px;
 }
 
-button {
-  border: 1px solid #ddd;
-  background: #fff;
-  padding: 8px 10px;
-  border-radius: 10px;
-  cursor: pointer;
+button{
+  border:1px solid #ddd;
+  background:#fff;
+  padding:4px 8px;      
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;       
+  line-height:1;
 }
+
 
 button:disabled {
   opacity: 0.5;
@@ -329,5 +351,7 @@ button:disabled {
 }
 
 .editBox{ margin-top:12px; padding:12px; border:1px solid #eee; border-radius:12px; background:#fff; }
+
+
 
 </style>

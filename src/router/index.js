@@ -6,6 +6,7 @@ const CatalogView = () => import("../views/CatalogView.vue");
 const OfferFormView = () => import("../views/OfferFormView.vue");
 
 const ClientDetailsView = () => import("../views/ClientDetailsView.vue");
+
 const ClientOverview = () => import("../views/client/ClientOverview.vue");
 const ClientOffers = () => import("../views/client/ClientOffers.vue");
 
@@ -21,7 +22,6 @@ const routes = [
     { path: "offers", name: "client-offers", component: ClientOffers, props: true },
   ],
 },
-
 
 ];
 

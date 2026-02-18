@@ -68,15 +68,16 @@ export default {
   },
   methods:{
     updateClock(){
+      console.log("HomeView: actualizare oră");
       const now = new Date();
       this.time = now.toLocaleTimeString();
       this.date = now.toLocaleDateString();
     }
   },
   
-    beforeUnmount() { 
-      console.log("HomeView demontat – timer oprit");
-      clearInterval(this.timer);
+   beforeUnmount() { 
+    console.log("HomeView demontat – timer oprit");
+    clearInterval(this.timer);
   },
 };
 

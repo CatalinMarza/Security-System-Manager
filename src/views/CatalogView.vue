@@ -89,13 +89,21 @@ export default {
       q: "",
 
       // formular "adaugă"
-      form: { type: "", name: "", price: 0 },
+      form: { 
+        type: "", 
+        name: "", 
+        price: 0 },
 
       // editare inline (IMPORTANT: nu e în form!)
       editId: "",
-      editForm: { type: "", name: "", price: 0 },
+      editForm: { 
+        type: "", 
+      name: "",
+      price: 0 },
 
       error: "",
+
+      
     };
   },
 
@@ -104,9 +112,9 @@ export default {
       return this.$store.state.data.catalog;
     },
     filtered() {
-      const q = (this.q || "").toLowerCase().trim();
+      const q = (this.q || "").toLowerCase().trim(); // dacă nu e căutare, returnează tot
       let arr = this.items.filter((i) => (i.name || "").toLowerCase().includes(q));
-      if (this.type) arr = arr.filter((i) => i.type === this.type);
+      if (this.type) arr = arr.filter((i) => i.type === this.type); // filtrare după tip
       return arr;
     },
   },
@@ -160,6 +168,7 @@ export default {
 
     removeItem(id) {
       if (!confirm("Ștergi acest item din catalog?")) return;
+      console.log("Ștergem item cu id", id);
 
       this.$store.commit("data/deleteCatalogItem", id);
 
@@ -167,11 +176,21 @@ export default {
       if (this.editId === id) this.cancelEdit();
     },
   },
+ //watch: {
+    // dacă se schimbă datele în store, actualizează local (ex: după add/update/delete)
+   // "$store.state.data.catalog"(newVal) {
+     // this.items = newVal;
+    //},
+  //},
 };
 </script>
 
 <style scoped>
-.toolbar { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+.toolbar { 
+  display:flex; 
+  gap:10px; 
+  margin-bottom:12px; 
+  flex-wrap:wrap; }
 
 .list { display:flex; flex-direction:column; gap:10px; }
 
@@ -203,14 +222,55 @@ export default {
 }
 
 .btn{
-  border:1px solid #ddd;
+  border: 1px solid #ddd;
   background:#fff;
-  padding:8px 10px;
+  padding:6px 10px;
   border-radius:10px;
   cursor:pointer;
+
 }
 
 .btn-danger{ border-color:#f2b8b5; }
 
 .err{ color:#b00020; margin: 8px 0 0; }
+
+@media (max-width:640px){
+
+  .item{
+    align-items:flex-start;
+  }
+
+  /* păstrează .right pe rânduri, dar în două coloane:
+     stânga = preț, dreapta = butoane */
+  .right{
+    display:grid;
+    grid-template-columns: max-content 1fr;
+    grid-template-areas:
+      "price edit"
+      "price del";
+    gap:8px 10px;
+    align-items:center;
+    justify-items:end;
+  }
+
+  .price{
+    grid-area:price;
+    align-self:center;        /* centrat lângă butoane */
+    justify-self:end;
+    white-space:nowrap;
+  }
+
+  .right .btn{
+    width:auto;               /* NU full width */
+    text-align:center;
+    padding:6px 10px;
+    font-size:14px;
+  }
+
+  /* butoanele (în ordinea din template) */
+  .right .btn:nth-of-type(1){ grid-area:edit; }
+  .right .btn:nth-of-type(2){ grid-area:del; }
+
+}
+
 </style>
